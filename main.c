@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
 
     printf("-------------------------\n");
     printf("Sequential time: %fs\n", endTimeSeq - startTimeSeq);
-    print("CPU usage: ");
+    printf("CPU usage: ");
     system("mpstat");
 
     printf("\n \n");
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 
     printf("-------------------------\n");
     printf("Parallel time: %fs\n", endTimeParallel - startTimeParallel);
-    print("CPU usage: ");
+    printf("CPU usage: ");
     system("mpstat");
 
     MPI_Finalize();
