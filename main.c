@@ -27,9 +27,11 @@ int main(int argc, char *argv[]){
     double endTimeSeq = MPI_Wtime();
 
     printf("-------------------------\n");
-    printf("Sequential time: %f segundos\n", endTimeSeq - startTimeSeq);
+    printf("Sequential time: %fs\n", endTimeSeq - startTimeSeq);
+    print("CPU usage: ");
+    system("mpstat");
+
     printf("\n \n");
-    printf("Parte paralela \n");
     printf("-------------------------\n");
 
     // Parte paralela
@@ -48,7 +50,9 @@ int main(int argc, char *argv[]){
     double endTimeParallel = MPI_Wtime();
 
     printf("-------------------------\n");
-    printf("Parallel time: %f segundos\n", endTimeParallel - startTimeParallel);
+    printf("Parallel time: %fs\n", endTimeParallel - startTimeParallel);
+    print("CPU usage: ");
+    system("mpstat");
 
     MPI_Finalize();
     freeMatrix(matrix, sizeOfMatrix);
