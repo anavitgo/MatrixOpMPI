@@ -88,7 +88,7 @@ void sumLinesAndPrint(int **matrix, int lines, int columns){
       for (int j = 0; j < columns; j++){ 
         result[i] += matrix[i][j];
       }
-      printf("Line %d: %d\n", i, result[i]);
+      printf("Line %d, total sum: %d\n", i, result[i]);
     }
 
     free(result);
@@ -104,7 +104,7 @@ void sumColumnsAndPrint(int **matrix, int lines, int columns) {
             result[i] += matrix[j][i];
         }
 
-        printf("Column %d: %d\n", i, result[i]);
+        printf("Column %d, total sum: %d\n", i, result[i]);
     }
   
     free(result);
@@ -130,7 +130,7 @@ void mpiSumLinesAndPrint(int **matrix, int lines, int columns, int rank, int siz
     // Imprime o resultado no processo 0
     if (rank == 0) {
         for (int i = 0; i < lines; i++) {
-            printf("Line %d: %d\n", i, globalResult[i]);
+            printf("Line %d, total sum: %d\n", i, globalResult[i]);
         }
     }
 
@@ -157,7 +157,7 @@ void mpiSumColumnsAndPrint(int **matrix, int lines, int columns, int rank, int s
     // Imprime o resultado no processo 0
     if (rank == 0) {
         for (int i = 0; i < columns; i++) {
-            printf("Column %d: %d\n", i, globalResult[i]);
+            printf("Column %d, total sum: %d\n", i, globalResult[i]);
         }
     }
 
