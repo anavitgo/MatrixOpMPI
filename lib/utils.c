@@ -196,18 +196,19 @@ int mpiSumMatrixElements(int **matrix, int matrixDim, int rank, int size) {
     return sum;
 }
 
-int mpiFindSmallestElement(int **matrix, int matrixDim, int rank, int size) {
-    // Inicializa smallest com o primeiro elemento da matriz
-    int smallest = matrix[0][0];
-    int localSmallest = matrix[0][0];
 
-    // Distribui as linhas da matriz entre os processos
+int mpiFindSmallestElement(int **matrix, int matrixDim, int rank, int size) {
+    // Initialize smallest with the maximum possible integer value
+    int smallest = INT_MAX;
+    int localSmallest = INT_MAX;
+
+    // Distribute the rows of the matrix among the processes
     int linesPerProcess = matrixDim / size;
     int remainder = matrixDim % size;
     int localLines = (rank < remainder) ? linesPerProcess + 1 : linesPerProcess;
     int localStart = (rank < remainder) ? rank * (linesPerProcess + 1) : (rank * linesPerProcess) + remainder;
 
-    // Encontra o menor elemento local nas linhas atribuídas ao processo
+    // Find the local minimum element in the assigned rows
     for (int i = 0; i < localLines; i++) {
         for (int j = 0; j < matrixDim; j++) {
             if (matrix[localStart + i][j] < localSmallest) {
@@ -216,11 +217,12 @@ int mpiFindSmallestElement(int **matrix, int matrixDim, int rank, int size) {
         }
     }
 
-    // Reduz o menor elemento local para obter o menor elemento global
+    // Reduce the local minimum element to get the global minimum element
     MPI_Reduce(&localSmallest, &smallest, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
 
     return smallest;
 }
+
 
 int mpiFindBiggestElement(int **matrix, int matrixDim, int rank, int size) {
     int biggest = matrix[0][0];
