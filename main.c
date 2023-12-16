@@ -7,7 +7,6 @@
 #include <omp.h>
 #include "utils.h"
 
-#define MPI_MAX_PROCESSOR_NAME 200
 
 int main(int argc, char *argv[]){
 
