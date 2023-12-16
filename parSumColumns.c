@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <mpi.h>
 #include <omp.h>
 
@@ -38,11 +39,12 @@ int main(int argc, char **argv) {
     double start_time = omp_get_wtime();
 
     // Sum each column locally using OpenMP
-    int *local_sums = (int *)malloc(local_cols * sizeof(int));
-    #pragma omp parallel for
+    int *local_sums = (int *)calloc(local_cols, sizeof(int));
+
+    #pragma omp parallel for collapse(2)
     for (int j = 0; j < local_cols; j++) {
-        local_sums[j] = 0;
         for (int i = 0; i < local_rows; i++) {
+            #pragma omp atomic
             local_sums[j] += local_matrix[i * local_cols + j];
         }
     }
@@ -58,11 +60,9 @@ int main(int argc, char **argv) {
     if (rank == 0) {
         printf("Original Matrix:\n");
         for (int i = 0; i < n; i++) {
-            int sum = 0;
             for (int j = 0; j < n; j++) {
-                sum += local_matrix[i][j];
+                printf("%d ", local_matrix[i * n + j]);
             }
-            printf("column %d, total sum: %d\n", j, sum);
             printf("\n");
         }
 
