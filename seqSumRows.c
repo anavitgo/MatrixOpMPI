@@ -21,6 +21,10 @@ int sum_row(int N, int *row) {
 
 int main(int argc, char *argv[]) {
 
+    printf("\n--------------------------------\n");
+    printf("EXECUTING SEQUENTIAL ROW SUM\n");
+    printf("-----------------------------------\n");
+
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <N>\n", argv[0]);
         return 1;
@@ -51,6 +55,10 @@ int main(int argc, char *argv[]) {
 
     // Free allocated memory
     free(matrix);
+
+    printf("\n--------------------------------\n");
+    printf("END OF SEQUENTIAL ROW SUM\n");
+    printf("-----------------------------------\n");
 
     return 0;
 }

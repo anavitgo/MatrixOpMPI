@@ -27,6 +27,10 @@ int sum_row(int n, int *row) {
 int main(int argc, char *argv[]) {
 
     double par_start_time, par_end_time;
+
+    printf("\n--------------------------------\n");
+    printf("EXECUTING PARALLEL ROW SUM\n");
+    printf("-----------------------------------\n");
     
     
     if (argc != 2) {
@@ -89,11 +93,15 @@ int main(int argc, char *argv[]) {
     free(matrix);
     free(local_rows);
 
-    MPI_Finalize();
     par_end_time = omp_get_wtime();
     printf("\n------------------------------\n");
     printf("Parallel time: %lfs\n", par_end_time - par_start_time);
     printf("\n------------------------------\n");
 
+    MPI_Finalize();
+
+    printf("\n--------------------------------\n");
+    printf("END OF PARALLEL ROW SUM\n");
+    printf("-----------------------------------\n");
     return 0;
 }
