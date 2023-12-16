@@ -4,6 +4,7 @@
 #include <omp.h>
 #include <mpi.h>
 #include <time.h>
+#include <limits.h>
 
 #include "utils.h"
 
