@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef USE_SEQ
+    #include <mpi.h>
+#endif
 #include <omp.h>
-#include <mpi.h>
 #include "utils.h"
 
 //#define NUM_THREADS 4
@@ -14,16 +16,16 @@ int main(int argc, char *argv[]){
     #ifdef USE_SEQ
 
 
-        double startTimeSeq = MPI_Wtime();
+        double startTimeSeq = omp_get_wtime();;
         printf("Biggest Element: %d \n", findBiggestElement(matrix, matrixDim));
         printf("Smallest Element: %d \n", findSmallestElement(matrix, matrixDim));
         printf("Sum of all elements: %d \n", sumMatrixElements(matrix, matrixDim));
         sumLinesAndPrint(matrix, matrixDim);
         sumColumnsAndPrint(matrix, matrixDim);
-        double endTimeSeq = MPI_Wtime();
+        double endTimeSeq = omp_get_wtime();;
 
         printf("-------------------------\n");
-        printf("Sequential time: %fs\n", endTimeSeq - startTimeSeq);
+        printf("Sequential time: %lfs\n", endTimeSeq - startTimeSeq);
 
 
     #endif
