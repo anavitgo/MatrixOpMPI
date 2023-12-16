@@ -19,6 +19,7 @@ void generate_random_matrix(int n, int *matrix) {
 int sum_column(int n, int *matrix, int col) {
     int sum = 0;
     for (int i = 0; i < n; i++) {
+        printf("index: %d\n", i * n + col);
         sum += matrix[i * n + col];
     }
     return sum;
@@ -90,14 +91,11 @@ int main(int argc, char *argv[]) {
     free(matrix);
     free(local_cols);
 
-    if(rank == 0){
-        par_end_time = omp_get_wtime();
-        printf("Parallel time: %lfs\n", par_end_time - par_start_time);
-    }
-
     MPI_Finalize();
 
     if(rank == 0){
+        par_end_time = omp_get_wtime();
+        printf("Parallel time: %lfs\n", par_end_time - par_start_time);
         printf("\n--------------------------------\n");
         printf("END OF PARALLEL COLUMN SUM\n");
         printf("--------------------------------\n");
