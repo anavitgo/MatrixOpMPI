@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #ifdef USE_MPI
 #include <mpi.h>
 #endif
@@ -15,8 +16,8 @@ int main(int argc, char *argv[]){
 
     srand((unsigned int)time(NULL));
 
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < N; j++){
+    for(int i = 0; i < matrixDim; i++){
+        for(int j = 0; j < matrixDim; j++){
             matrix[i][j] = rand() % 1000;
         }
     }
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]){
         // printf("Biggest Element: %d \n", mpiFindBiggestElement(matrix, matrixDim, rank, size));
         // printf("Smallest Element: %d \n", mpiFindSmallestElement(matrix, matrixDim, rank, size));
         // printf("Sum of all elements: %d \n", mpiSumMatrixElements(matrix, matrixDim, rank, size));
-        mpiSumLinesAndPrint((int **)matrix, matrixDim, rank, size);
+        mpiSumLinesAndPrint(matrix, matrixDim, rank, size);
         // mpiSumColumnsAndPrint(matrix, matrixDim, rank, size);
 
         MPI_Finalize();
