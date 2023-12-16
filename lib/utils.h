@@ -1,8 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-int **createMatrix(int N);
-void freeMatrix(int **matrix, int lines);
 void printMatrix(int **matrix, int matrixDim);
 int findBiggestElement(int **matrix, int matrixDim);
 int findSmallestElement(int **matrix, int matrixDim);

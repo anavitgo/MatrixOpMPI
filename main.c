@@ -11,7 +11,17 @@
 int main(int argc, char *argv[]){
 
     int matrixDim = atoi(argv[1]);
-    int **matrix = createMatrix(matrixDim);
+    int matrix[matrixDim][matrixDim];
+
+    srand((unsigned int)time(NULL));
+
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++){
+            matrix[i][j] = rand() % 1000;
+        }
+    }
+
+
     // #ifdef USE_SEQ
 
 

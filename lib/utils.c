@@ -9,31 +9,6 @@
 #include "utils.h"
 
 
-int **createMatrix(int N){
-    int **matrix = malloc(N * sizeof(int*));
-    matrix[0] = malloc((size_t)N * (size_t)N * sizeof(int));
-    for(int i = 1; i < N; i++){
-        matrix[i] = matrix[0] + i * N;
-    }
-
-    srand((unsigned int)time(NULL));
-
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < N; j++){
-            matrix[i][j] = rand() % 1000;
-        }
-    }
-
-  return matrix;
-}
-
-void freeMatrix(int **matrix, int matrixDim){
-    for (int i = 0; i < matrixDim; i++){
-        free(matrix[i]);
-    }
-    free(matrix);
-}
-
 void printMatrix(int **matrix, int matrixDim){
     for (int i = 0; i < matrixDim; i++){
         for (int j = 0; j < matrixDim; j++){
@@ -137,7 +112,7 @@ void mpiSumLinesAndPrint(int **matrix, int matrixDim, int rank, int size) {
     if (rank == 0) {
         allSums = (int *)malloc(matrixDim * sizeof(int));
     }
-    MPI_Gather(&localSums, localLines, MPI_INT, allSums, localLines, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(localSums, localLines, MPI_INT, allSums, localLines, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Print the results
 
