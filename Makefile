@@ -12,7 +12,7 @@ seq_run:
 	@./$(BINARY)
 
 seq:
-	gcc -Wall main.c $(SOURCES) -o $(BINARY) -fopenmp -I lib -DUSE_SEQ
+	$(CC) -Wall main.c $(SOURCES) -o $(BINARY) -fopenmp -I lib -DUSE_SEQ
 
 mpi:
 	$(CC) -Wall main.c $(SOURCES) -o $(BINARY) -fopenmp -I lib
