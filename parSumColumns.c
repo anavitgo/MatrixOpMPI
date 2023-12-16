@@ -15,6 +15,8 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    omp_set_num_threads(OMP_NUM_THREADS); 
+
     if (argc != 2) {
         if (rank == 0) {
             printf("Usage: %s <matrix_size>\n", argv[0]);
@@ -75,7 +77,7 @@ int main(int argc, char **argv) {
         }
 
         // Print elapsed time
-        printf("\nElapsed Time: %f seconds\n", end_time - start_time);
+        printf("Parallel time: %lfs\n", end_time - start_time);
 
         printf("\n--------------------------------\n");
         printf("END OF PARALLEL COLUMN SUM\n");
