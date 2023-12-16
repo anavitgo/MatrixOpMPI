@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <omp.h>
-
+#include <time.h>
 #define MAX_RAND_RANGE 1000
 
 // Function to generate a random matrix of integers
@@ -30,7 +29,7 @@ int main(int argc, char *argv[]) {
     int N = atoi(argv[1]);
 
     // Measure the start time
-    double start_time = omp_get_wtime();
+    clock_t start_time = clock();
 
     // Allocate memory for the matrix
     int *matrix = (int *)malloc(N * N * sizeof(int));
@@ -45,8 +44,8 @@ int main(int argc, char *argv[]) {
     }
 
     // Measure the end time
-    double end_time = omp_get_wtime();
-    double elapsed_time = end_time - start_time;
+    clock_t end_time = clock();
+    double elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
 
     printf("Sequential time: %lfs\n", elapsed_time);
 
