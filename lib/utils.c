@@ -11,10 +11,12 @@
 int **createMatrix(int N){
   int **matrix = malloc(N * sizeof(int *));
 
+  srand((unsigned int)time(NULL));
+
   for (int i = 0; i < N; i++){
     matrix[i] = malloc(N * sizeof(int));
     for (int j = 0; j < N; j++){ 
-      matrix[i][j] = rand() % 10;
+      matrix[i][j] = rand() % 1000;
     }
   }
 
