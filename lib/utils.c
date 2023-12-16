@@ -110,31 +110,52 @@ void sumColumnsAndPrint(int **matrix, int matrixDim) {
 }
 
 
-// Função para calcular a soma das linhas e imprimir o resultado
 void mpiSumLinesAndPrint(int **matrix, int matrixDim, int rank, int size) {
-    int *result = malloc(matrixDim * sizeof(int));
+    // Distribute the rows of the matrix among the processes
+    int linesPerProcess = matrixDim / size;
+    int remainder = matrixDim % size;
+    int localLines = (rank < remainder) ? linesPerProcess + 1 : linesPerProcess;
+    int localStart = (rank < remainder) ? rank * (linesPerProcess + 1) : (rank * linesPerProcess) + remainder;
 
-    for (int i = 0; i < matrixDim; i++) {
-        result[i] = 0;
+    // Scatter the rows of the matrix to all processes
+    int *localRows = (int *)malloc(localLines * matrixDim * sizeof(int));
+    MPI_Scatter(&(matrix[0][0]), localLines * matrixDim, MPI_INT, localRows, localLines * matrixDim, MPI_INT, 0, MPI_COMM_WORLD);
 
+    // Sum the rows locally
+    int *localSums = (int *)malloc(localLines * sizeof(int));
+    for (int i = 0; i < localLines; i++) {
+        localSums[i] = 0;
         for (int j = 0; j < matrixDim; j++) {
-            result[i] += matrix[i][j];
+            localSums[i] += localRows[i * matrixDim + j];
         }
     }
 
-    // Reduz a soma de todas as linhas usando MPI_Reduce
-    int *globalResult = malloc(matrixDim * sizeof(int));
-    MPI_Reduce(result, globalResult, matrixDim, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-
-    // Imprime o resultado no processo 0
+    // Gather the local sums to process 0
+    int *allSums = NULL;
     if (rank == 0) {
+        allSums = (int *)malloc(matrixDim * sizeof(int));
+    }
+    MPI_Gather(localSums, localLines, MPI_INT, allSums, localLines, MPI_INT, 0, MPI_COMM_WORLD);
+
+    // Print the results
+
+    if (rank == 0) {
+        char processor_name[MPI_MAX_PROCESSOR_NAME];
+        int name_len;
+        MPI_Get_processor_name(processor_name, &name_len);
+
+        printf("Sum of lines on machine %s:\n", processor_name);
+        printf("Sum of lines:\n");
         for (int i = 0; i < matrixDim; i++) {
-            printf("Line %d, total sum: %d\n", i, globalResult[i]);
+            printf("Line %d: %d\n", i, allSums[i]);
         }
     }
 
-    free(result);
-    free(globalResult);
+    free(localRows);
+    free(localSums);
+    if (rank == 0) {
+        free(allSums);
+    }
 }
 
 // Função para calcular a soma das colunas e imprimir o resultado
