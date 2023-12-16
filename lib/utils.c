@@ -12,7 +12,7 @@
 int **createMatrix(int N){
     int **matrix = malloc(N * sizeof(int*));
     matrix[0] = malloc((size_t)N * (size_t)N * sizeof(int));
-    for(i = 1; i < N; i++){
+    for(int i = 1; i < N; i++){
         matrix[i] = matrix[0] + i * N;
     }
 
