@@ -9,32 +9,26 @@
 
 int main(int argc, char *argv[]){
 
-    MPI_Init(&argc, &argv);
     int matrixDim = atoi(argv[1]);
-
     int **matrix = createMatrix(matrixDim);
-
-    // Parte sequencial
-    double startTimeSeq = MPI_Wtime();
-    // Esse print é mais pra debug, pode tirar depois
-    //printMatrix(matrix, matrixDim);
-    printf("Biggest Element: %d \n", findBiggestElement(matrix, matrixDim));
-    printf("Smallest Element: %d \n", findSmallestElement(matrix, matrixDim));
-    printf("Sum of all elements: %d \n", sumMatrixElements(matrix, matrixDim));
-    sumLinesAndPrint(matrix, matrixDim);
-    sumColumnsAndPrint(matrix, matrixDim);
-    double endTimeSeq = MPI_Wtime();
-
-    printf("-------------------------\n");
-    printf("Sequential time: %fs\n", endTimeSeq - startTimeSeq);
+    #ifdef USE_SEQ
 
 
-    printf("\n \n");
-    printf("-------------------------\n");
+        double startTimeSeq = MPI_Wtime();
+        printf("Biggest Element: %d \n", findBiggestElement(matrix, matrixDim));
+        printf("Smallest Element: %d \n", findSmallestElement(matrix, matrixDim));
+        printf("Sum of all elements: %d \n", sumMatrixElements(matrix, matrixDim));
+        sumLinesAndPrint(matrix, matrixDim);
+        sumColumnsAndPrint(matrix, matrixDim);
+        double endTimeSeq = MPI_Wtime();
 
-    // Parte paralela
-    
+        printf("-------------------------\n");
+        printf("Sequential time: %fs\n", endTimeSeq - startTimeSeq);
 
+
+    #endif
+
+    MPI_Init(&argc, &argv);
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);

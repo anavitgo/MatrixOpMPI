@@ -5,10 +5,16 @@ HOST_FILE = hostfile
 NUM_PROC ?= 4 #default value
 MATRIX_DIM ?= 100 #default value
 
-run:
+mpi_run:
 	@mpirun -np $(NUM_PROC) -hostfile $(HOST_FILE) ./$(BINARY) $(MATRIX_DIM)
 
-all:
+seq_run:
+	@./$(BINARY)
+
+seq:
+	gcc -Wall main.c $(SOURCES) -o $(BINARY) -fopenmp -I lib -DUSE_SEQ
+
+mpi:
 	$(CC) -Wall main.c $(SOURCES) -o $(BINARY) -fopenmp -I lib
 
 valgrind:
