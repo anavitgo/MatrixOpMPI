@@ -8,6 +8,9 @@
 #define OMP_NUM_THREADS 8
 
 int main(int argc, char **argv) {
+    printf("\n--------------------------------\n");
+    printf("END OF SEQUENTIAL COLUMN SUM\n");
+    printf("-----------------------------------\n");
     int rank, size;
 
     MPI_Init(&argc, &argv);
@@ -34,7 +37,7 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < local_rows; i++) {
         for (int j = 0; j < local_cols; j++) {
-            local_matrix[i * local_cols + j] = rand() % MAX_RAND_RANGE; // Random numbers between 0 and 9
+            local_matrix[i * local_cols + j] = rand() % MAX_RAND_RANGE; 
         }
     }
 
@@ -60,13 +63,6 @@ int main(int argc, char **argv) {
 
     // Print the result from the root process
     if (rank == 0) {
-        printf("Original Matrix:\n");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                printf("%d ", local_matrix[i * n + j]);
-            }
-            printf("\n");
-        }
 
         printf("\nColumn Sums:\n");
         for (int j = 0; j < n; j++) {
@@ -75,6 +71,10 @@ int main(int argc, char **argv) {
 
         // Print elapsed time
         printf("\nElapsed Time: %f seconds\n", end_time - start_time);
+
+        printf("\n--------------------------------\n");
+        printf("END OF SEQUENTIAL COLUMN SUM\n");
+        printf("-----------------------------------\n");
     }
 
     // Clean up
