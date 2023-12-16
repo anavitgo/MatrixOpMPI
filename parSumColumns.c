@@ -40,21 +40,6 @@ int main(int argc, char **argv) {
             matrix[i] = rand() % MAX_RAND_RANGE;
         }
 
-        printf("\nGenerated Matrix:\n");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                printf("%d ", matrix[i * n + j]);
-            }
-            printf("\n");
-        }
-
-        for (int j = 0; j < n; j++) {
-            int column_sum = 0;
-            for (int i = 0; i < n; i++) {
-                column_sum += matrix[i * n + j];
-            }
-            printf("Column %d Sum: %d\n", j, column_sum);
-        }
     }
 
     // Scatter the matrix data to all processes
