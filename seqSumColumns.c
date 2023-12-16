@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_RAND_RANGE 1000
+#define MAX_RAND_RANGE 10
 
 // Function to generate a random matrix of integers
 void generate_random_matrix(int N, int *matrix) {
@@ -12,8 +12,8 @@ void generate_random_matrix(int N, int *matrix) {
 }
 
 // Function to sum the elements of a column
-int sum_column(int N, int *matrix, int col) {
-    int sum = 0;
+unsigned long long int sum_column(int N, int *matrix, int col) {
+    unsigned long long int sum = 0;
     for (int i = 0; i < N; i++) {
         sum += matrix[i * N + col];
     }
@@ -44,8 +44,8 @@ int main(int argc, char *argv[]) {
 
     // Sum all columns
     for (int j = 0; j < N; j++) {
-        int col_sum = sum_column(N, matrix, j);
-        printf("Column %d Sum: %d\n", j, col_sum);
+        unsigned long long int col_sum = sum_column(N, matrix, j);
+        printf("Column %d Sum: %llu\n", j, col_sum);
     }
 
     // Measure the end time

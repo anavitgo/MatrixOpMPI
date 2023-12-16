@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#define MAX_RAND_RANGE 1000
+#include <stdint.h> 
+#define MAX_RAND_RANGE 10
 
 // Function to generate a random matrix of integers
 void generate_random_matrix(int N, int *matrix) {
@@ -11,8 +12,8 @@ void generate_random_matrix(int N, int *matrix) {
 }
 
 // Function to sum all matrix elements
-int sum_matrix(int N, int *matrix) {
-    int sum = 0;
+uint64_t sum_matrix(int N, int *matrix) {
+    uint64_t sum = 0;  // Change data type to uint64_t
     for (int i = 0; i < N * N; i++) {
         sum += matrix[i];
     }
@@ -41,9 +42,9 @@ int main(int argc, char *argv[]) {
     // Generate a random matrix
     generate_random_matrix(N, matrix);
 
-    // Sum all matrix elements
-    int total_sum = sum_matrix(N, matrix);
-    printf("Total Matrix Sum: %d\n", total_sum);
+    // Sum all matrix elements (now using uint64_t)
+    uint64_t total_sum = sum_matrix(N, matrix);
+    printf("Total Matrix Sum: %llu\n", total_sum);  // Use %llu for uint64_t
 
     // Measure the end time
     clock_t end_time = clock();

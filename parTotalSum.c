@@ -15,8 +15,8 @@ void generate_random_matrix(int N, int *matrix) {
 }
 
 // Function to sum all matrix elements within a range of rows
-int sum_matrix_range(int N, int *matrix, int start_row, int end_row) {
-    int sum = 0;
+unsigned long long int sum_matrix_range(int N, int *matrix, int start_row, int end_row) {
+    unsigned long long int sum = 0;
     #pragma omp parallel for reduction(+:sum)
     for (int i = start_row; i < end_row; i++) {
         for (int j = 0; j < N; j++) {
@@ -27,16 +27,13 @@ int sum_matrix_range(int N, int *matrix, int start_row, int end_row) {
 }
 
 int main(int argc, char *argv[]) {
-
-
-
     MPI_Init(&argc, &argv);
 
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    omp_set_num_threads(OMP_NUM_THREADS); 
+    omp_set_num_threads(OMP_NUM_THREADS);
 
     if (argc != 2) {
         if (rank == 0) {
@@ -62,7 +59,6 @@ int main(int argc, char *argv[]) {
         printf("-----------------------------------\n");
         matrix = (int *)malloc(N * N * sizeof(int));
         generate_random_matrix(N, matrix);
-
     }
 
     // Scatter chunks of the matrix data to all processes
@@ -71,11 +67,11 @@ int main(int argc, char *argv[]) {
     MPI_Scatter(matrix, local_rows * N, MPI_INT, local_matrix, local_rows * N, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Sum local matrix elements within each process
-    int local_sum = sum_matrix_range(N, local_matrix, 0, local_rows);
+    unsigned long long int local_sum = sum_matrix_range(N, local_matrix, 0, local_rows);
 
     // Gather local sums to calculate the total sum
-    int total_sum;
-    MPI_Reduce(&local_sum, &total_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    unsigned long long int total_sum;
+    MPI_Reduce(&local_sum, &total_sum, 1, MPI_UNSIGNED_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
 
     // Measure the end time
     double end_time = MPI_Wtime();
@@ -83,7 +79,7 @@ int main(int argc, char *argv[]) {
 
     // Print the result from the root process
     if (rank == 0) {
-        printf("Total Matrix Sum: %d\n", total_sum);
+        printf("Total Matrix Sum: %llu\n", total_sum);
         printf("Parallel time: %lfs\n", elapsed_time);
 
         printf("\n--------------------------------\n");
@@ -98,7 +94,6 @@ int main(int argc, char *argv[]) {
     }
 
     MPI_Finalize();
-
 
     return 0;
 }

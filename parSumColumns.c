@@ -39,7 +39,6 @@ int main(int argc, char **argv) {
         for (int i = 0; i < n * n; i++) {
             matrix[i] = rand() % MAX_RAND_RANGE;
         }
-
     }
 
     // Scatter the matrix data to all processes
@@ -51,7 +50,7 @@ int main(int argc, char **argv) {
     double start_time = omp_get_wtime();
 
     // Sum each column locally using OpenMP
-    int *local_sums = (int *)calloc(n, sizeof(int));
+    unsigned long long int *local_sums = (unsigned long long int *)calloc(n, sizeof(unsigned long long int));
 
     #pragma omp parallel for collapse(2)
     for (int j = 0; j < n; j++) {
@@ -61,8 +60,8 @@ int main(int argc, char **argv) {
     }
 
     // Reduce the local sums across all processes
-    int *global_sums = (int *)malloc(n * sizeof(int));
-    MPI_Reduce(local_sums, global_sums, n, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    unsigned long long int *global_sums = (unsigned long long int *)malloc(n * sizeof(unsigned long long int));
+    MPI_Reduce(local_sums, global_sums, n, MPI_UNSIGNED_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
 
     // Stop the timer
     double end_time = omp_get_wtime();
@@ -71,7 +70,7 @@ int main(int argc, char **argv) {
     if (rank == 0) {
         printf("\nColumn Sums:\n");
         for (int j = 0; j < n; j++) {
-            printf("Column %d: %d\n", j, global_sums[j]);
+            printf("Column %d: %llu\n", j, global_sums[j]);
         }
 
         // Print elapsed time
