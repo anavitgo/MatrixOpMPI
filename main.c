@@ -41,11 +41,11 @@ int main(int argc, char *argv[]){
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     double startTimeParallel = MPI_Wtime();
-    printf("Biggest Element: %d \n", mpiFindBiggestElement(matrix, sizeOfMatrix, sizeOfMatrix, rank, size));
-    printf("Smallest Element: %d \n", mpiFindSmallestElement(matrix, sizeOfMatrix, sizeOfMatrix, rank, size));
-    printf("Sum of all elements: %d \n", mpiSumMatrixElements(matrix, sizeOfMatrix, sizeOfMatrix, rank, size));
-    mpiSumLinesAndPrint(matrix, sizeOfMatrix, sizeOfMatrix, rank, size);
-    mpiSumColumnsAndPrint(matrix, sizeOfMatrix, sizeOfMatrix, rank, size);
+    printf("Biggest Element: %d \n", mpiFindBiggestElement(matrix, matrixDim, rank, size));
+    printf("Smallest Element: %d \n", mpiFindSmallestElement(matrix, matrixDim, rank, size));
+    printf("Sum of all elements: %d \n", mpiSumMatrixElements(matrix, matrixDim, rank, size));
+    mpiSumLinesAndPrint(matrix, matrixDim, rank, size);
+    mpiSumColumnsAndPrint(matrix, matrixDim, rank, size);
     double endTimeParallel = MPI_Wtime();
 
     printf("-------------------------\n");

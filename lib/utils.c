@@ -32,7 +32,7 @@ void printMatrix(int **matrix, int matrixDim){
     for (int i = 0; i < matrixDim; i++){
         for (int j = 0; j < matrixDim; j++){
             printf("%d ", matrix[i][j]);
-            if (j == columns - 1){ 
+            if (j == matrixDim - 1){ 
                 printf("\n");
             }
         }
@@ -95,7 +95,7 @@ void sumLinesAndPrint(int **matrix, int matrixDim){
 void sumColumnsAndPrint(int **matrix, int matrixDim) {
 
     for (int i = 0; i < matrixDim; i++) {
-        res = 0;
+        int res = 0;
 
         for (int j = 0; j < matrixDim; j++) {
             res += matrix[j][i];
