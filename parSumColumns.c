@@ -16,10 +16,9 @@ void generate_random_matrix(int n, int *matrix) {
 }
 
 // Function to sum the elements of a column
-int sum_column(int n, int *matrix, int col) {
-    int sum = 0;
+long long int sum_column(int n, int *matrix, int col) {
+    long long int sum = 0;
     for (int i = 0; i < n; i++) {
-        printf("index: %d\n", i * n + col);
         sum += matrix[i * n + col];
     }
     return sum;
@@ -71,6 +70,7 @@ int main(int argc, char *argv[]) {
 
     // Allocate memory for the local columns on each processor
     int *local_cols = (int *)malloc(cols_per_proc * n * sizeof(int));
+
     
     // Distribute columns among processors
     MPI_Scatter(matrix, cols_per_proc * n, MPI_INT, local_cols, cols_per_proc * n, MPI_INT, 0, MPI_COMM_WORLD);
@@ -78,14 +78,14 @@ int main(int argc, char *argv[]) {
     // Perform column sums in parallel
     #pragma omp parallel for
     for (int j = 0; j < cols_per_proc; j++) {
-        int col_sum = sum_column(n, local_cols, j);
+        long long int col_sum = sum_column(n, local_cols, j);
 
         char processor_name[MPI_MAX_PROCESSOR_NAME];
         int name_len;
         MPI_Get_processor_name(processor_name, &name_len);
 
         // Print the sum of each column
-        printf("Processor %d is running on host %s - Column %d Sum: %d\n", rank, processor_name, j + rank * cols_per_proc, col_sum);
+        printf("Processor %d is running on host %s - Column %d Sum: %lld\n", rank, processor_name, j + rank * cols_per_proc, col_sum);
     }
 
     free(matrix);
