@@ -9,7 +9,7 @@ mpi_run:
 	@mpirun -np $(NUM_PROC) -hostfile $(HOST_FILE) ./$(BINARY) $(MATRIX_DIM)
 
 seq_run:
-	@./$(BINARY)
+	@./$(BINARY) $(MATRIX_DIM)
 
 seq:
 	$(CC) -Wall main.c $(SOURCES) -o $(BINARY) -fopenmp -I lib -DUSE_SEQ
