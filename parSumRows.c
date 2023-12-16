@@ -26,7 +26,7 @@ int sum_row(int n, int *row) {
 
 int main(int argc, char *argv[]) {
 
-    double seq_start_time, seq_end_time, par_start_time, par_end_time;
+    double par_start_time, par_end_time;
     
     
     if (argc != 2) {
@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     MPI_Finalize();
     par_end_time = omp_get_wtime();
     printf("\n------------------------------\n");
-    printf("Parallel time: %.4lfs\n", , par_end_time - par_start_time);
+    printf("Parallel time: %lfs\n", par_end_time - par_start_time);
     printf("\n------------------------------\n");
 
     return 0;

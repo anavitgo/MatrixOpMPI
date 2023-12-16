@@ -17,7 +17,7 @@ run:
 
 mpi: check_source $(SEQ_SOURCE) $(PAR_SOURCE)
 	gcc -Wall $(SEQ_SOURCE) -o $(BINARY_SEQ) -fopenmp -lgomp
-	$(CC) -Wall $(PAR_SOURCE) -o $(BINARY_PAR) -fopenmp
+	$(CC) -Wall $(PAR_SOURCE) -o $(BINARY_PAR) -fopenmp -lgomp
 
 valgrind:
 	valgrind --tool=memcheck --leak-check=full --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BINARY)
