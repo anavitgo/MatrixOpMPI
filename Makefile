@@ -14,8 +14,8 @@ seq_run:
 seq:
 	$(CC) -Wall main.c $(SOURCES) -o $(BINARY) -fopenmp -I lib -DUSE_SEQ
 
-mpi:
-	$(CC) -Wall sumRows.c $(SOURCES) -o $(BINARY) -fopenmp -I lib -DUSE_MPI
+mpi: $(SOURCE)
+	$(CC) -Wall $(SOURCE) $(SOURCES) -o $(BINARY) -fopenmp -I lib -DUSE_MPI
 
 valgrind:
 	valgrind --tool=memcheck --leak-check=full --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BINARY)
