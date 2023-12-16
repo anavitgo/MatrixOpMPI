@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <stdint.h>  // Include this header for uint64_t
+#include <stdint.h>  // Include this header for unsigned long long int
 #include <mpi.h>
 #include <omp.h>
 
@@ -17,8 +17,8 @@ void generate_random_matrix(int n, int *matrix) {
 }
 
 // Function to sum the elements of a row
-uint64_t sum_row(int n, int *row) {
-    uint64_t sum = 0;  // Change data type to uint64_t
+unsigned long long int sum_row(int n, int *row) {
+    unsigned long long int sum = 0;  // Change data type to unsigned long long int
     for (int i = 0; i < n; i++) {
         sum += row[i];
     }
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     // Perform row sums in parallel
 #pragma omp parallel for
     for (int i = 0; i < rows_per_proc; i++) {
-        uint64_t row_sum = sum_row(n, &local_rows[i * n]);  // Change data type to uint64_t
+        unsigned long long int row_sum = sum_row(n, &local_rows[i * n]);  // Change data type to unsigned long long int
 
         char processor_name[MPI_MAX_PROCESSOR_NAME];
         int name_len;

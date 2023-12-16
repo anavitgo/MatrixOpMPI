@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdint.h>  // Include this header for uint64_t
+#include <stdint.h>  // Include this header for unsigned long long int
 #define MAX_RAND_RANGE 10
 
 // Function to generate a random matrix of integers
@@ -12,8 +12,8 @@ void generate_random_matrix(int N, int *matrix) {
 }
 
 // Function to sum the elements of a row
-uint64_t sum_row(int N, int *row) {
-    uint64_t sum = 0;  // Change data type to uint64_t
+unsigned long long int sum_row(int N, int *row) {
+    unsigned long long int sum = 0;  // Change data type to unsigned long long int
     for (int i = 0; i < N; i++) {
         sum += row[i];
     }
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
     // Sum all rows
     for (int i = 0; i < N; i++) {
-        uint64_t row_sum = sum_row(N, &matrix[i * N]);  // Change data type to uint64_t
+        unsigned long long int row_sum = sum_row(N, &matrix[i * N]);  // Change data type to unsigned long long int
         printf("Row %d Sum: %llu\n", i, row_sum);  // Change format specifier to %llu
     }
 

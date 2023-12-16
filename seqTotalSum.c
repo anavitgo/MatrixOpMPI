@@ -12,8 +12,8 @@ void generate_random_matrix(int N, int *matrix) {
 }
 
 // Function to sum all matrix elements
-uint64_t sum_matrix(int N, int *matrix) {
-    uint64_t sum = 0;  // Change data type to uint64_t
+unsigned long long int sum_matrix(int N, int *matrix) {
+    unsigned long long int sum = 0;  // Change data type to unsigned long long int
     for (int i = 0; i < N * N; i++) {
         sum += matrix[i];
     }
@@ -42,9 +42,9 @@ int main(int argc, char *argv[]) {
     // Generate a random matrix
     generate_random_matrix(N, matrix);
 
-    // Sum all matrix elements (now using uint64_t)
-    uint64_t total_sum = sum_matrix(N, matrix);
-    printf("Total Matrix Sum: %llu\n", total_sum);  // Use %llu for uint64_t
+    // Sum all matrix elements (now using unsigned long long int)
+    unsigned long long int total_sum = sum_matrix(N, matrix);
+    printf("Total Matrix Sum: %llu\n", total_sum);  // Use %llu for unsigned long long int
 
     // Measure the end time
     clock_t end_time = clock();
