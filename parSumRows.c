@@ -52,15 +52,19 @@ int main(int argc, char *argv[]) {
 
     int *matrix = NULL;
 
+    // Processor with rank 0 creates the matrix
     if (rank == 0) {
         printf("\n--------------------------------\n");
         printf("EXECUTING PARALLEL ROW SUM\n");
         printf("--------------------------------\n");
         par_start_time = omp_get_wtime();
-        // Processor with rank 0 creates the matrix
         matrix = (int *)malloc(n * n * sizeof(int));
-        srand(time(NULL));
+        srand((unsigned int)time(NULL) + rank);
         generate_random_matrix(n, matrix);
+        for (int i = 0; i < n; i++) {
+            int row_sum = sum_row(n, &matrix[i * n]);
+            printf("Row %d, total sum: %d\n", i, row_sum);
+        }
     }
 
     // Broadcast matrix size to all processors
