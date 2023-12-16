@@ -27,8 +27,7 @@ int main(int argc, char *argv[]){
 
     printf("-------------------------\n");
     printf("Sequential time: %fs\n", endTimeSeq - startTimeSeq);
-    printf("CPU usage: ");
-    system("mpstat");
+
 
     printf("\n \n");
     printf("-------------------------\n");
@@ -50,8 +49,6 @@ int main(int argc, char *argv[]){
 
     printf("-------------------------\n");
     printf("Parallel time: %fs\n", endTimeParallel - startTimeParallel);
-    printf("CPU usage: ");
-    system("mpstat");
 
     MPI_Finalize();
     freeMatrix(matrix, matrixDim);
