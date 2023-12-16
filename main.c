@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #ifndef USE_SEQ
-    #include <mpi.h>
+#include <mpi.h>
 #endif
 #include <omp.h>
 #include "utils.h"
