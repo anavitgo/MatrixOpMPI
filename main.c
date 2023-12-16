@@ -45,12 +45,12 @@ int main(int argc, char *argv[]){
         // printf("Sum of all elements: %d \n", mpiSumMatrixElements(matrix, matrixDim, rank, size));
         mpiSumLinesAndPrint(matrix, matrixDim, rank, size);
         // mpiSumColumnsAndPrint(matrix, matrixDim, rank, size);
-        double endTimeParallel = MPI_Wtime();
-
-        printf("-------------------------\n");
-        printf("Parallel time: %fs\n", endTimeParallel - startTimeParallel);
 
         MPI_Finalize();
+
+        double endTimeParallel = MPI_Wtime();
+        printf("-------------------------\n");
+        printf("Parallel time: %fs\n", endTimeParallel - startTimeParallel);
 
     // #endif
 
