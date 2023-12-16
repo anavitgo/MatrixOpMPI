@@ -76,7 +76,6 @@ int main(int argc, char *argv[]) {
 
     // Determine the number of rows each processor will handle
     int rows_per_proc = n / size;
-    int remainder_rows = n % size;
 
     // Allocate memory for the local rows on each processor
     int *local_rows = (int *)malloc(rows_per_proc * n * sizeof(int));
