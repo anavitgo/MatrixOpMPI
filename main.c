@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef USE_SEQ
+#ifdef USE_MPI
 #include <mpi.h>
 #endif
 #include <omp.h>
