@@ -61,10 +61,6 @@ int main(int argc, char *argv[]) {
         matrix = (int *)malloc(n * n * sizeof(int));
         srand((unsigned int)time(NULL) + rank);
         generate_random_matrix(n, matrix);
-        for (int i = 0; i < n; i++) {
-            int row_sum = sum_row(n, &matrix[i * n]);
-            printf("Row %d, total sum: %d\n", i, row_sum);
-        }
     }
 
     // Broadcast matrix size to all processors
@@ -96,15 +92,12 @@ int main(int argc, char *argv[]) {
     free(matrix);
     free(local_rows);
 
-    if(rank == 0){
-        par_end_time = omp_get_wtime();
-        printf("Parallel time: %lfs\n", par_end_time - par_start_time);
-    }
-
 
     MPI_Finalize();
 
     if(rank == 0){
+        par_end_time = omp_get_wtime();
+        printf("Parallel time: %lfs\n", par_end_time - par_start_time);
         printf("\n--------------------------------\n");
         printf("END OF PARALLEL ROW SUM\n");
         printf("--------------------------------\n");
