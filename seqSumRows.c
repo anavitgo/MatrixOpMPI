@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     double end_time = omp_get_wtime();
     double elapsed_time = end_time - start_time;
 
-    printf("Sequential time: %lds\n", elapsed_time);
+    printf("Sequential time: %lfs\n", elapsed_time);
 
     // Free allocated memory
     free(matrix);
