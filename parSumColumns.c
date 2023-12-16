@@ -4,7 +4,7 @@
 #include <mpi.h>
 #include <omp.h>
 
-#define MAX_RAND_RANGE 1000
+#define MAX_RAND_RANGE 10
 #define OMP_NUM_THREADS 8
 
 int main(int argc, char **argv) {
