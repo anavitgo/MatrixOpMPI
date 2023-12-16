@@ -55,22 +55,9 @@ int main(int argc, char *argv[]) {
 
     if (rank == 0) {
         // Processor with rank 0 creates the matrix
-        seq_start_time = omp_get_wtime();
         matrix = (int *)malloc(n * n * sizeof(int));
         srand(time(NULL));
         generate_random_matrix(n, matrix);
-
-        for (int i = 0; i < n; i++) {
-            int sum = 0;
-            for (int j = 0; j < n; j++) {
-                sum += matrix[i * n + j];
-            }
-            printf("Row: %d, total sum: %d\n", i, sum);
-        }
-        seq_end_time = omp_get_wtime();
-        printf("\n------------------------------\n");
-        printf("Sequential time: %.4lfs\n", seq_end_time - seq_start_time);
-        printf("\n------------------------------\n");
     }
 
     // Broadcast matrix size to all processors
@@ -105,7 +92,7 @@ int main(int argc, char *argv[]) {
     MPI_Finalize();
     par_end_time = omp_get_wtime();
     printf("\n------------------------------\n");
-    printf("Parallel time: %.4lfs\n", par_end_time - par_start_time);
+    printf("Parallel time: %.4lfs\n", , par_end_time - par_start_time);
     printf("\n------------------------------\n");
 
     return 0;
