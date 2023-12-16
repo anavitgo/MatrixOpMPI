@@ -8,13 +8,7 @@
 #define MAX_RAND_RANGE 1000
 #define OMP_NUM_THREADS 8
 
-int sum_column(int N, int *matrix, int col) {
-    int sum = 0;
-    for (int i = 0; i < N; i++) {
-        sum += matrix[i * N + col];
-    }
-    return sum;
-}
+
 
 // Function to generate a random matrix of integers
 void generate_random_matrix(int n, int *matrix) {
