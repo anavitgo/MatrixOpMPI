@@ -62,11 +62,7 @@ int main(int argc, char *argv[]) {
         printf("-----------------------------------\n");
         matrix = (int *)malloc(N * N * sizeof(int));
         generate_random_matrix(N, matrix);
-        long long sum = 0;
-        for(int i = 0; i < N * N; i++){
-            sum += matrix[i];
-        }
-        printf("TOTAL SUM SEQ: %lld\n", sum);
+
     }
 
     // Scatter chunks of the matrix data to all processes
