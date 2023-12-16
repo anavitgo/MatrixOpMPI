@@ -1,5 +1,4 @@
 CC = mpicc
-SOURCES = lib/utils.c
 BINARY = out
 HOST_FILE = hostfile
 NUM_PROC ?= 4 #default value
@@ -17,8 +16,8 @@ run:
 	@mpirun -np $(NUM_PROC) -hostfile $(HOST_FILE) ./$(BINARY) $(MATRIX_DIM)
 
 mpi: check_source $(SEQ_SOURCE) $(PAR_SOURCE)
-	gcc -Wall $(SOURCES) $(SEQ_SOURCE) -o $(BINARY_SEQ) -fopenmp -I lib
-	$(CC) -Wall $(SOURCES) $(PAR_SOURCE) -o $(BINARY_PAR) -fopenmp -I lib
+	gcc -Wall $(SEQ_SOURCE) -o $(BINARY_SEQ) -fopenmp
+	$(CC) -Wall $(PAR_SOURCE) -o $(BINARY_PAR) -fopenmp
 
 valgrind:
 	valgrind --tool=memcheck --leak-check=full --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BINARY)
