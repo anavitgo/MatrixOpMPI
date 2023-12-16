@@ -4,6 +4,9 @@
 #include <mpi.h>
 #include <omp.h>
 
+#define MAX_RAND_RANGE 1000
+#define OMP_NUM_THREADS 8
+
 int main(int argc, char **argv) {
     int rank, size;
 
@@ -31,7 +34,7 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < local_rows; i++) {
         for (int j = 0; j < local_cols; j++) {
-            local_matrix[i * local_cols + j] = rand() % 10; // Random numbers between 0 and 9
+            local_matrix[i * local_cols + j] = rand() % MAX_RAND_RANGE; // Random numbers between 0 and 9
         }
     }
 
@@ -44,7 +47,6 @@ int main(int argc, char **argv) {
     #pragma omp parallel for collapse(2)
     for (int j = 0; j < local_cols; j++) {
         for (int i = 0; i < local_rows; i++) {
-            #pragma omp atomic
             local_sums[j] += local_matrix[i * local_cols + j];
         }
     }
