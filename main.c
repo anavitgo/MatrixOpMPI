@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
 
     int matrixDim = atoi(argv[1]);
     int **matrix = createMatrix(matrixDim);
-    #ifdef USE_SEQ
+    // #ifdef USE_SEQ
 
 
         double startTimeSeq = omp_get_wtime();;
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
         printf("-------------------------\n");
         printf("Sequential time: %lfs\n", endTimeSeq - startTimeSeq);
 
-    #else 
+    // #else 
         MPI_Init(&argc, &argv);
         int rank, size;
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
 
         MPI_Finalize();
 
-    #endif
+    // #endif
 
     freeMatrix(matrix, matrixDim);
 
