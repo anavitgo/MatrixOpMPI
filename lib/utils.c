@@ -8,12 +8,12 @@
 #include "utils.h"
 
 
-int **createMatrix(int lines, int columns){
-  int **matrix = malloc(lines * sizeof(int *));
+int **createMatrix(int N){
+  int **matrix = malloc(N * sizeof(int *));
 
-  for (int i = 0; i < lines; i++){
-    matrix[i] = malloc(columns * sizeof(int));
-    for (int j = 0; j < columns; j++){ 
+  for (int i = 0; i < N; i++){
+    matrix[i] = malloc(N * sizeof(int));
+    for (int j = 0; j < N; j++){ 
       matrix[i][j] = rand() % 10;
     }
   }
@@ -21,16 +21,16 @@ int **createMatrix(int lines, int columns){
   return matrix;
 }
 
-void freeMatrix(int **matrix, int lines){
-    for (int i = 0; i < lines; i++){
+void freeMatrix(int **matrix, int matrixDim){
+    for (int i = 0; i < matrixDim; i++){
         free(matrix[i]);
     }
     free(matrix);
 }
 
-void printMatrix(int **matrix, int lines, int columns){
-    for (int i = 0; i < lines; i++){
-        for (int j = 0; j < columns; j++){
+void printMatrix(int **matrix, int matrixDim){
+    for (int i = 0; i < matrixDim; i++){
+        for (int j = 0; j < matrixDim; j++){
             printf("%d ", matrix[i][j]);
             if (j == columns - 1){ 
                 printf("\n");
@@ -39,11 +39,11 @@ void printMatrix(int **matrix, int lines, int columns){
     }
 }
 
-int findBiggestElement(int **matrix, int lines, int columns){
+int findBiggestElement(int **matrix, int matrixDim){
   int biggest = matrix[0][0];
 
-  for (int i = 0; i < lines; i++){
-    for (int j = 0; j < columns; j++){ 
+  for (int i = 0; i < matrixDim; i++){
+    for (int j = 0; j < matrixDim; j++){ 
       if (matrix[i][j] > biggest){
         biggest = matrix[i][j];
       }
@@ -53,11 +53,11 @@ int findBiggestElement(int **matrix, int lines, int columns){
   return biggest;
 }
 
-int findSmallestElement(int **matrix, int lines, int columns){
+int findSmallestElement(int **matrix, int matrixDim){
   int smallest = matrix[0][0];
 
-  for (int i = 0; i < lines; i++){
-    for (int j = 0; j < columns; j++){ 
+  for (int i = 0; i < matrixDim; i++){
+    for (int j = 0; j < matrixDim; j++){ 
       if (matrix[i][j] < smallest){
         smallest = matrix[i][j];
       }
@@ -67,11 +67,11 @@ int findSmallestElement(int **matrix, int lines, int columns){
   return smallest;
 }
 
-int sumMatrixElements(int **matrix, int lines, int columns){
+int sumMatrixElements(int **matrix, int matrixDim){
   int sum = matrix[0][0];
 
-  for (int i = 0; i < lines; i++){
-    for (int j = 0; j < columns; j++){ 
+  for (int i = 0; i < matrixDim; i++){
+    for (int j = 0; j < matrixDim; j++){ 
         sum += matrix[i][j];
     }
   }
@@ -79,57 +79,53 @@ int sumMatrixElements(int **matrix, int lines, int columns){
   return sum;
 }
 
-void sumLinesAndPrint(int **matrix, int lines, int columns){
-    int *result = malloc(lines * sizeof(int));
+void sumLinesAndPrint(int **matrix, int matrixDim){
 
-    for (int i = 0; i < lines; i++){
-      result[i] = 0;
+    for (int i = 0; i < matrixDim; i++){
+      int res = 0;
 
-      for (int j = 0; j < columns; j++){ 
-        result[i] += matrix[i][j];
+      for (int j = 0; j < matrixDim; j++){ 
+        res += matrix[i][j];
       }
-      printf("Line %d, total sum: %d\n", i, result[i]);
+      printf("Line %d, total sum: %d\n", i, res);
     }
 
-    free(result);
 }
 
-void sumColumnsAndPrint(int **matrix, int lines, int columns) {
-    int *result = malloc(columns * sizeof(int));
+void sumColumnsAndPrint(int **matrix, int matrixDim) {
 
-    for (int i = 0; i < columns; i++) {
-        result[i] = 0;
+    for (int i = 0; i < matrixDim; i++) {
+        res = 0;
 
-        for (int j = 0; j < lines; j++) {
-            result[i] += matrix[j][i];
+        for (int j = 0; j < matrixDim; j++) {
+            res += matrix[j][i];
         }
 
-        printf("Column %d, total sum: %d\n", i, result[i]);
+        printf("Column %d, total sum: %d\n", i, res);
     }
   
-    free(result);
 }
 
 
 // Função para calcular a soma das linhas e imprimir o resultado
-void mpiSumLinesAndPrint(int **matrix, int lines, int columns, int rank, int size) {
-    int *result = malloc(lines * sizeof(int));
+void mpiSumLinesAndPrint(int **matrix, int matrixDim, int rank, int size) {
+    int *result = malloc(matrixDim * sizeof(int));
 
-    for (int i = 0; i < lines; i++) {
+    for (int i = 0; i < matrixDim; i++) {
         result[i] = 0;
 
-        for (int j = 0; j < columns; j++) {
+        for (int j = 0; j < matrixDim; j++) {
             result[i] += matrix[i][j];
         }
     }
 
     // Reduz a soma de todas as linhas usando MPI_Reduce
-    int *globalResult = malloc(lines * sizeof(int));
-    MPI_Reduce(result, globalResult, lines, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    int *globalResult = malloc(matrixDim * sizeof(int));
+    MPI_Reduce(result, globalResult, matrixDim, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     // Imprime o resultado no processo 0
     if (rank == 0) {
-        for (int i = 0; i < lines; i++) {
+        for (int i = 0; i < matrixDim; i++) {
             printf("Line %d, total sum: %d\n", i, globalResult[i]);
         }
     }
@@ -139,24 +135,24 @@ void mpiSumLinesAndPrint(int **matrix, int lines, int columns, int rank, int siz
 }
 
 // Função para calcular a soma das colunas e imprimir o resultado
-void mpiSumColumnsAndPrint(int **matrix, int lines, int columns, int rank, int size) {
-    int *result = malloc(columns * sizeof(int));
+void mpiSumColumnsAndPrint(int **matrix, int matrixDim, int rank, int size) {
+    int *result = malloc(matrixDim * sizeof(int));
 
-    for (int i = 0; i < columns; i++) {
+    for (int i = 0; i < matrixDim; i++) {
         result[i] = 0;
 
-        for (int j = 0; j < lines; j++) {
+        for (int j = 0; j < matrixDim; j++) {
             result[i] += matrix[j][i];
         }
     }
 
     // Reduz a soma de todas as colunas usando MPI_Reduce
-    int *globalResult = malloc(columns * sizeof(int));
-    MPI_Reduce(result, globalResult, columns, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    int *globalResult = malloc(matrixDim * sizeof(int));
+    MPI_Reduce(result, globalResult, matrixDim, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     // Imprime o resultado no processo 0
     if (rank == 0) {
-        for (int i = 0; i < columns; i++) {
+        for (int i = 0; i < matrixDim; i++) {
             printf("Column %d, total sum: %d\n", i, globalResult[i]);
         }
     }
@@ -165,21 +161,21 @@ void mpiSumColumnsAndPrint(int **matrix, int lines, int columns, int rank, int s
     free(globalResult);
 }
 
-int mpiSumMatrixElements(int **matrix, int lines, int columns, int rank, int size) {
+int mpiSumMatrixElements(int **matrix, int matrixDim, int rank, int size) {
     int sum = matrix[0][0];
 
     MPI_Win win;
     MPI_Win_create(&sum, sizeof(int), sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &win);
 
     // Distribui as linhas da matriz entre os processos
-    int linesPerProcess = lines / size;
-    int remainder = lines % size;
+    int linesPerProcess = matrixDim / size;
+    int remainder = matrixDim % size;
     int localLines = (rank < remainder) ? linesPerProcess + 1 : linesPerProcess;
     int localStart = (rank < remainder) ? rank * (linesPerProcess + 1) : (rank * linesPerProcess) + remainder;
 
     // Calcula a soma local das linhas atribuídas ao processo
     for (int i = 0; i < localLines; i++) {
-        for (int j = 0; j < columns; j++) {
+        for (int j = 0; j < matrixDim; j++) {
             MPI_Win_lock(MPI_LOCK_SHARED, rank, 0, win);
             sum += matrix[localStart + i][j];
             MPI_Win_unlock(rank, win);
@@ -198,20 +194,20 @@ int mpiSumMatrixElements(int **matrix, int lines, int columns, int rank, int siz
     return sum;
 }
 
-int mpiFindSmallestElement(int **matrix, int lines, int columns, int rank, int size) {
+int mpiFindSmallestElement(int **matrix, int matrixDim, int rank, int size) {
     // Inicializa smallest com o primeiro elemento da matriz
     int smallest = matrix[0][0];
     int localSmallest = matrix[0][0];
 
     // Distribui as linhas da matriz entre os processos
-    int linesPerProcess = lines / size;
-    int remainder = lines % size;
+    int linesPerProcess = matrixDim / size;
+    int remainder = matrixDim % size;
     int localLines = (rank < remainder) ? linesPerProcess + 1 : linesPerProcess;
     int localStart = (rank < remainder) ? rank * (linesPerProcess + 1) : (rank * linesPerProcess) + remainder;
 
     // Encontra o menor elemento local nas linhas atribuídas ao processo
     for (int i = 0; i < localLines; i++) {
-        for (int j = 0; j < columns; j++) {
+        for (int j = 0; j < matrixDim; j++) {
             if (matrix[localStart + i][j] < localSmallest) {
                 localSmallest = matrix[localStart + i][j];
             }
@@ -224,19 +220,19 @@ int mpiFindSmallestElement(int **matrix, int lines, int columns, int rank, int s
     return smallest;
 }
 
-int mpiFindBiggestElement(int **matrix, int lines, int columns, int rank, int size) {
+int mpiFindBiggestElement(int **matrix, int matrixDim, int rank, int size) {
     int biggest = matrix[0][0];
     int localBiggest = matrix[0][0];
 
     // Distribui as linhas da matriz entre os processos
-    int linesPerProcess = lines / size;
-    int remainder = lines % size;
+    int linesPerProcess = matrixDim / size;
+    int remainder = matrixDim % size;
     int localLines = (rank < remainder) ? linesPerProcess + 1 : linesPerProcess;
     int localStart = (rank < remainder) ? rank * (linesPerProcess + 1) : (rank * linesPerProcess) + remainder;
 
     // Encontra o maior elemento local nas linhas atribuídas ao processo
     for (int i = 0; i < localLines; i++) {
-        for (int j = 0; j < columns; j++) {
+        for (int j = 0; j < matrixDim; j++) {
             if (matrix[localStart + i][j] > localBiggest) {
                 localBiggest = matrix[localStart + i][j];
             }

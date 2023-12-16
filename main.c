@@ -10,20 +10,19 @@
 int main(int argc, char *argv[]){
 
     MPI_Init(&argc, &argv);
-    // Só criamos matrizes quadradas
-    int sizeOfMatrix = 1000;
+    int matrixDim = atoi(argv[1]);
 
-    int **matrix = createMatrix(sizeOfMatrix, sizeOfMatrix);
+    int **matrix = createMatrix(matrixDim);
 
     // Parte sequencial
     double startTimeSeq = MPI_Wtime();
     // Esse print é mais pra debug, pode tirar depois
-    //printMatrix(matrix, sizeOfMatrix, sizeOfMatrix);
-    printf("Biggest Element: %d \n", findBiggestElement(matrix, sizeOfMatrix, sizeOfMatrix));
-    printf("Smallest Element: %d \n", findSmallestElement(matrix, sizeOfMatrix, sizeOfMatrix));
-    printf("Sum of all elements: %d \n", sumMatrixElements(matrix, sizeOfMatrix, sizeOfMatrix));
-    sumLinesAndPrint(matrix, sizeOfMatrix, sizeOfMatrix);
-    sumColumnsAndPrint(matrix, sizeOfMatrix, sizeOfMatrix);
+    //printMatrix(matrix, matrixDim);
+    printf("Biggest Element: %d \n", findBiggestElement(matrix, matrixDim));
+    printf("Smallest Element: %d \n", findSmallestElement(matrix, matrixDim));
+    printf("Sum of all elements: %d \n", sumMatrixElements(matrix, matrixDim));
+    sumLinesAndPrint(matrix, matrixDim);
+    sumColumnsAndPrint(matrix, matrixDim);
     double endTimeSeq = MPI_Wtime();
 
     printf("-------------------------\n");
