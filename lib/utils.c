@@ -87,7 +87,7 @@ void sumColumnsAndPrint(int **matrix, int matrixDim) {
 }
 
 
-void mpiSumLinesAndPrint(int matrix[matrixDim][matrixDim], int matrixDim, int rank, int size) {
+void mpiSumLinesAndPrint(int matrix[][], int matrixDim, int rank, int size) {
     // Distribute the rows of the matrix among the processes
     int linesPerProcess = matrixDim / size;
     int remainder = matrixDim % size;
