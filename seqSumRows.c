@@ -21,6 +21,7 @@ int sum_row(int N, int *row) {
 }
 
 int main(int argc, char *argv[]) {
+
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <N>\n", argv[0]);
         return 1;
@@ -28,24 +29,14 @@ int main(int argc, char *argv[]) {
 
     int N = atoi(argv[1]);
 
+    // Measure the start time
+    double start_time = omp_get_wtime();
 
     // Allocate memory for the matrix
     int *matrix = (int *)malloc(N * N * sizeof(int));
 
     // Generate a random matrix
     generate_random_matrix(N, matrix);
-
-    // Print the original matrix
-    printf("Original Matrix:\n");
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            printf("%d\t", matrix[i * N + j]);
-        }
-        printf("\n");
-    }
-
-    // Measure the start time
-    double start_time = omp_get_wtime();
 
     // Sum all rows
     for (int i = 0; i < N; i++) {
@@ -57,7 +48,7 @@ int main(int argc, char *argv[]) {
     double end_time = omp_get_wtime();
     double elapsed_time = end_time - start_time;
 
-    printf("Elapsed time: %f seconds\n", elapsed_time);
+    printf("Sequential time: %lds\n", elapsed_time);
 
     // Free allocated memory
     free(matrix);

@@ -17,7 +17,7 @@ run:
 	@mpirun -np $(NUM_PROC) -hostfile $(HOST_FILE) ./$(BINARY) $(MATRIX_DIM)
 
 mpi: check_source $(SEQ_SOURCE) $(PAR_SOURCE)
-	$(CC) -Wall $(SOURCES) $(SEQ_SOURCE) -o $(BINARY_SEQ) -fopenmp -I lib
+	gcc -Wall $(SOURCES) $(SEQ_SOURCE) -o $(BINARY_SEQ) -fopenmp -I lib
 	$(CC) -Wall $(SOURCES) $(PAR_SOURCE) -o $(BINARY_PAR) -fopenmp -I lib
 
 valgrind:
