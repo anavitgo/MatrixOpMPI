@@ -7,7 +7,7 @@
 #include <omp.h>
 #include "utils.h"
 
-//#define NUM_THREADS 4
+#define MPI_MAX_PROCESSOR_NAME 200
 
 int main(int argc, char *argv[]){
 
@@ -32,6 +32,13 @@ int main(int argc, char *argv[]){
         int rank, size;
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
         MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+        char processor_name[MPI_MAX_PROCESSOR_NAME];
+        int name_len;
+
+        MPI_Get_processor_name(processor_name, &name_len);
+
+        printf("Hello from MPI process %d on host %s\n", rank, processor_name);
 
         double startTimeParallel = MPI_Wtime();
         printf("Biggest Element: %d \n", mpiFindBiggestElement(matrix, matrixDim, rank, size));
