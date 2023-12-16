@@ -27,26 +27,27 @@ int main(int argc, char *argv[]){
         printf("-------------------------\n");
         printf("Sequential time: %lfs\n", endTimeSeq - startTimeSeq);
 
+    #else 
+        MPI_Init(&argc, &argv);
+        int rank, size;
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+        double startTimeParallel = MPI_Wtime();
+        printf("Biggest Element: %d \n", mpiFindBiggestElement(matrix, matrixDim, rank, size));
+        printf("Smallest Element: %d \n", mpiFindSmallestElement(matrix, matrixDim, rank, size));
+        printf("Sum of all elements: %d \n", mpiSumMatrixElements(matrix, matrixDim, rank, size));
+        mpiSumLinesAndPrint(matrix, matrixDim, rank, size);
+        mpiSumColumnsAndPrint(matrix, matrixDim, rank, size);
+        double endTimeParallel = MPI_Wtime();
+
+        printf("-------------------------\n");
+        printf("Parallel time: %fs\n", endTimeParallel - startTimeParallel);
+
+        MPI_Finalize();
 
     #endif
 
-    MPI_Init(&argc, &argv);
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    double startTimeParallel = MPI_Wtime();
-    printf("Biggest Element: %d \n", mpiFindBiggestElement(matrix, matrixDim, rank, size));
-    printf("Smallest Element: %d \n", mpiFindSmallestElement(matrix, matrixDim, rank, size));
-    printf("Sum of all elements: %d \n", mpiSumMatrixElements(matrix, matrixDim, rank, size));
-    mpiSumLinesAndPrint(matrix, matrixDim, rank, size);
-    mpiSumColumnsAndPrint(matrix, matrixDim, rank, size);
-    double endTimeParallel = MPI_Wtime();
-
-    printf("-------------------------\n");
-    printf("Parallel time: %fs\n", endTimeParallel - startTimeParallel);
-
-    MPI_Finalize();
     freeMatrix(matrix, matrixDim);
 
     return 0;
