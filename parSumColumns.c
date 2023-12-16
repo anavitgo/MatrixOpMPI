@@ -8,6 +8,14 @@
 #define MAX_RAND_RANGE 1000
 #define OMP_NUM_THREADS 8
 
+int sum_column(int N, int *matrix, int col) {
+    int sum = 0;
+    for (int i = 0; i < N; i++) {
+        sum += matrix[i * N + col];
+    }
+    return sum;
+}
+
 // Function to generate a random matrix of integers
 void generate_random_matrix(int n, int *matrix) {
     for (int i = 0; i < n * n; i++) {
@@ -60,6 +68,13 @@ int main(int argc, char *argv[]) {
         matrix = (int *)malloc(n * n * sizeof(int));
         srand(time(NULL));
         generate_random_matrix(n, matrix);
+        printf("sequential sum\n");
+        for (int j = 0; j < n; j++) {
+            int col_sum = sum_column(n, matrix, j);
+            printf("Column %d Sum: %d\n", j, col_sum);
+        }
+
+        printf("end of sequential sum\n");
     }
 
     // Broadcast matrix size to all processors
