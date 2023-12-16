@@ -119,7 +119,7 @@ void mpiSumLinesAndPrint(int **matrix, int matrixDim, int rank, int size) {
 
     // Scatter the rows of the matrix to all processes
     int *localRows = (int *)malloc(localLines * matrixDim * sizeof(int));
-    MPI_Scatter(&(matrix[0][0]), localLines * matrixDim, MPI_INT, localRows, localLines * matrixDim, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(&matrix[0][0], localLines * matrixDim, MPI_INT, localRows, localLines * matrixDim, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Sum the rows locally
     int *localSums = (int *)malloc(localLines * sizeof(int));

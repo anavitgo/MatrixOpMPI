@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
         // printf("Biggest Element: %d \n", mpiFindBiggestElement(matrix, matrixDim, rank, size));
         // printf("Smallest Element: %d \n", mpiFindSmallestElement(matrix, matrixDim, rank, size));
         // printf("Sum of all elements: %d \n", mpiSumMatrixElements(matrix, matrixDim, rank, size));
-        mpiSumLinesAndPrint(matrix, matrixDim, rank, size);
+        mpiSumLinesAndPrint((int **)matrix, matrixDim, rank, size);
         // mpiSumColumnsAndPrint(matrix, matrixDim, rank, size);
 
         MPI_Finalize();
