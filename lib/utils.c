@@ -10,16 +10,19 @@
 
 
 int **createMatrix(int N){
-  int **matrix = malloc(N * sizeof(int *));
-
-  srand((unsigned int)time(NULL));
-
-  for (int i = 0; i < N; i++){
-    matrix[i] = malloc(N * sizeof(int));
-    for (int j = 0; j < N; j++){ 
-      matrix[i][j] = rand() % 1000;
+    int **matrix = malloc(N * sizeof(int*));
+    matrix[0] = malloc((size_t)N * (size_t)N * sizeof(int));
+    for(i = 1; i < N; i++){
+        matrix[i] = matrix[0] + i * N;
     }
-  }
+
+    srand((unsigned int)time(NULL));
+
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++){
+            matrix[i][j] = rand() % 1000;
+        }
+    }
 
   return matrix;
 }
@@ -115,7 +118,6 @@ void mpiSumLinesAndPrint(int **matrix, int matrixDim, int rank, int size) {
     int linesPerProcess = matrixDim / size;
     int remainder = matrixDim % size;
     int localLines = (rank < remainder) ? linesPerProcess + 1 : linesPerProcess;
-    int localStart = (rank < remainder) ? rank * (linesPerProcess + 1) : (rank * linesPerProcess) + remainder;
 
     // Scatter the rows of the matrix to all processes
     int *localRows = (int *)malloc(localLines * matrixDim * sizeof(int));
@@ -135,7 +137,7 @@ void mpiSumLinesAndPrint(int **matrix, int matrixDim, int rank, int size) {
     if (rank == 0) {
         allSums = (int *)malloc(matrixDim * sizeof(int));
     }
-    MPI_Gather(localSums, localLines, MPI_INT, allSums, localLines, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(&localSums, localLines, MPI_INT, allSums, localLines, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Print the results
 

@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
 
     // #endif
 
-    freeMatrix(matrix, matrixDim);
+    // freeMatrix(matrix, matrixDim);
 
     return 0;
 }
