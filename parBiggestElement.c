@@ -64,14 +64,6 @@ int main(int argc, char *argv[]) {
         printf("-----------------------------------\n");
         matrix = (int *)malloc(N * N * sizeof(int));
         generate_random_matrix(N, matrix);
-        int max_element = INT_MIN;  // Initialize to the minimum possible integer value
-
-        for (int i = 0; i < N * N; i++) {
-            if (matrix[i] > max_element) {
-                max_element = matrix[i];
-            }
-        }
-        printf("MAX ELEMENT FOUND: %d\n", max_element);
     }
 
     // Scatter chunks of the matrix data to all processes
