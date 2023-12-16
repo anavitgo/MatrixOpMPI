@@ -8,9 +8,7 @@
 #define OMP_NUM_THREADS 8
 
 int main(int argc, char **argv) {
-    printf("\n--------------------------------\n");
-    printf("END OF SEQUENTIAL COLUMN SUM\n");
-    printf("-----------------------------------\n");
+
     int rank, size;
 
     MPI_Init(&argc, &argv);
@@ -27,9 +25,16 @@ int main(int argc, char **argv) {
 
     int n = atoi(argv[1]);
 
+
+    if(rank == 0){
+        printf("\n--------------------------------\n");
+        printf("EXECUTING PARALLEL COLUMN SUM\n");
+        printf("-----------------------------------\n");
+
+    }
+
     // Seed the random number generator
     srand((unsigned int)time(NULL) + rank);
-
     // Each process generates its own part of the matrix
     int local_rows = n / size;
     int local_cols = n;
@@ -73,7 +78,7 @@ int main(int argc, char **argv) {
         printf("\nElapsed Time: %f seconds\n", end_time - start_time);
 
         printf("\n--------------------------------\n");
-        printf("END OF SEQUENTIAL COLUMN SUM\n");
+        printf("END OF PARALLEL COLUMN SUM\n");
         printf("-----------------------------------\n");
     }
 
