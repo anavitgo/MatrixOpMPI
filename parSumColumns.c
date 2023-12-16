@@ -1,114 +1,86 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <string.h>
 #include <mpi.h>
 #include <omp.h>
 
-#define MAX_RAND_RANGE 1000
-#define OMP_NUM_THREADS 8
+int main(int argc, char **argv) {
+    int rank, size;
 
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-
-// Function to generate a random matrix of integers
-void generate_random_matrix(int n, int *matrix) {
-    for (int i = 0; i < n * n; i++) {
-        matrix[i] = rand() % MAX_RAND_RANGE; 
-    }
-}
-
-// Function to sum the elements of a column
-long long int sum_column(int n, int *matrix, int col) {
-    long long int sum = 0;
-    for (int i = 0; i < n; i++) {
-        sum += matrix[i * n + col];
-    }
-    return sum;
-}
-
-int main(int argc, char *argv[]) {
-
-    double par_start_time, par_end_time;
-    
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s <matrix_size>\n", argv[0]);
+        if (rank == 0) {
+            printf("Usage: %s <matrix_size>\n", argv[0]);
+        }
+        MPI_Finalize();
         return 1;
     }
 
     int n = atoi(argv[1]);
 
-    if (n <= 0) {
-        fprintf(stderr, "Invalid matrix size\n");
-        return 1;
+    // Seed the random number generator
+    srand((unsigned int)time(NULL) + rank);
+
+    // Each process generates its own part of the matrix
+    int local_rows = n / size;
+    int local_cols = n;
+    int *local_matrix = (int *)malloc(local_rows * local_cols * sizeof(int));
+
+    for (int i = 0; i < local_rows; i++) {
+        for (int j = 0; j < local_cols; j++) {
+            local_matrix[i * local_cols + j] = rand() % 10; // Random numbers between 0 and 9
+        }
     }
-    
-    MPI_Init(&argc, &argv);
 
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    // Start the timer
+    double start_time = omp_get_wtime();
 
-    // Set the number of threads for parallelization
-    omp_set_num_threads(OMP_NUM_THREADS); 
+    // Sum each column locally using OpenMP
+    int *local_sums = (int *)malloc(local_cols * sizeof(int));
+    #pragma omp parallel for
+    for (int j = 0; j < local_cols; j++) {
+        local_sums[j] = 0;
+        for (int i = 0; i < local_rows; i++) {
+            local_sums[j] += local_matrix[i * local_cols + j];
+        }
+    }
 
-    int *matrix = NULL;
+    // Reduce the local sums across all processes
+    int *global_sums = (int *)malloc(local_cols * sizeof(int));
+    MPI_Reduce(local_sums, global_sums, local_cols, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
+    // Stop the timer
+    double end_time = omp_get_wtime();
+
+    // Print the result from the root process
     if (rank == 0) {
-        printf("\n--------------------------------\n");
-        printf("EXECUTING PARALLEL COLUMN SUM\n");
-        printf("--------------------------------\n");
-        par_start_time = omp_get_wtime();
-        // Processor with rank 0 creates the matrix
-        matrix = (int *)malloc(n * n * sizeof(int));
-        srand(time(NULL));
-        generate_random_matrix(n, matrix);
-        printf("sequential sum\n");
-        for (int j = 0; j < n; j++) {
-            int col_sum = sum_column(n, matrix, j);
-            printf("Column %d Sum: %d\n", j, col_sum);
+        printf("Original Matrix:\n");
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = 0; j < n; j++) {
+                sum += local_matrix[i][j];
+            }
+            printf("column %d, total sum: %d\n", j, sum);
+            printf("\n");
         }
 
-        printf("end of sequential sum\n");
+        printf("\nColumn Sums:\n");
+        for (int j = 0; j < n; j++) {
+            printf("Column %d: %d\n", j, global_sums[j]);
+        }
+
+        // Print elapsed time
+        printf("\nElapsed Time: %f seconds\n", end_time - start_time);
     }
 
-    // Broadcast matrix size to all processors
-    MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-    // Determine the number of columns each processor will handle
-    int cols_per_proc = n / size;
-
-    // Allocate memory for the local columns on each processor
-    int *local_cols = (int *)malloc(cols_per_proc * n * sizeof(int));
-
-    
-    // Distribute columns among processors
-    MPI_Scatter(matrix, cols_per_proc * n, MPI_INT, local_cols, cols_per_proc * n, MPI_INT, 0, MPI_COMM_WORLD);
-
-    // Perform column sums in parallel
-    #pragma omp parallel for
-    for (int j = 0; j < cols_per_proc; j++) {
-        long long int col_sum = sum_column(n, local_cols, j);
-
-        char processor_name[MPI_MAX_PROCESSOR_NAME];
-        int name_len;
-        MPI_Get_processor_name(processor_name, &name_len);
-
-        // Print the sum of each column
-        printf("Processor %d is running on host %s - Column %d Sum: %lld\n", rank, processor_name, j + rank * cols_per_proc, col_sum);
-    }
-
-    free(matrix);
-    free(local_cols);
+    // Clean up
+    free(local_matrix);
+    free(local_sums);
+    free(global_sums);
 
     MPI_Finalize();
-
-    if(rank == 0){
-        par_end_time = omp_get_wtime();
-        printf("Parallel time: %lfs\n", par_end_time - par_start_time);
-        printf("\n--------------------------------\n");
-        printf("END OF PARALLEL COLUMN SUM\n");
-        printf("--------------------------------\n");
-    }
 
     return 0;
 }
