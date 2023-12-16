@@ -13,7 +13,7 @@ endif
 run:
 	@mpirun -np $(NUM_PROC) -hostfile $(HOST_FILE) ./$(BINARY) $(MATRIX_DIM)
 
-mpi: $(SOURCE)
+mpi: check_source $(SOURCE)
 	$(CC) -Wall $(SOURCE) $(SOURCES) -o $(BINARY) -fopenmp -I lib
 
 valgrind:
