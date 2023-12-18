@@ -53,9 +53,7 @@ int main(int argc, char *argv[]) {
     // Seed the random number generator
     srand((unsigned int)time(NULL) + rank);
 
-    // Measure the start time
-    double start_time = MPI_Wtime();
-
+    
     // Allocate memory for the matrix
     int *matrix = NULL;
     if (rank == 0) {
@@ -70,14 +68,16 @@ int main(int argc, char *argv[]) {
     int local_rows = N / size;
     int *local_matrix = (int *)malloc(local_rows * N * sizeof(int));
     MPI_Scatter(matrix, local_rows * N, MPI_INT, local_matrix, local_rows * N, MPI_INT, 0, MPI_COMM_WORLD);
-
+    MPI_Barrier(MPI_COMM_WORLD);
+    // Measure the start time
+    double start_time = MPI_Wtime();
     // Find the local maximum element within each process
     int local_max = find_max_element_range(N, local_matrix, 0, local_rows);
 
     // Gather local maximum elements to find the total maximum element
     int total_max;
     MPI_Reduce(&local_max, &total_max, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
-
+    MPI_Barrier(MPI_COMM_WORLD);
     // Measure the end time
     double end_time = MPI_Wtime();
     double elapsed_time = end_time - start_time;

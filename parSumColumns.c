@@ -46,6 +46,7 @@ int main(int argc, char **argv) {
     int *local_matrix = (int *)malloc(local_rows * n * sizeof(int));
     MPI_Scatter(matrix, local_rows * n, MPI_INT, local_matrix, local_rows * n, MPI_INT, 0, MPI_COMM_WORLD);
 
+    MPI_Barrier(MPI_COMM_WORLD);
     // Start the timer
     double start_time = omp_get_wtime();
 
@@ -62,6 +63,7 @@ int main(int argc, char **argv) {
     // Reduce the local sums across all processes
     unsigned long long int *global_sums = (unsigned long long int *)malloc(n * sizeof(unsigned long long int));
     MPI_Reduce(local_sums, global_sums, n, MPI_UNSIGNED_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
 
     // Stop the timer
     double end_time = omp_get_wtime();

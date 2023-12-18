@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 
     // Find the minimum element in the matrix
     int min_element = find_min_element(N, matrix);
-    printf("Maximum Element in Matrix: %d\n", min_element);
+    printf("Minimum Element in Matrix: %d\n", min_element);
 
     // Measure the end time
     clock_t end_time = clock();

@@ -48,8 +48,6 @@ int main(int argc, char *argv[]) {
     // Seed the random number generator
     srand((unsigned int)time(NULL) + rank);
 
-    // Measure the start time
-    double start_time = MPI_Wtime();
 
     // Allocate memory for the matrix
     int *matrix = NULL;
@@ -65,14 +63,16 @@ int main(int argc, char *argv[]) {
     int local_rows = N / size;
     int *local_matrix = (int *)malloc(local_rows * N * sizeof(int));
     MPI_Scatter(matrix, local_rows * N, MPI_INT, local_matrix, local_rows * N, MPI_INT, 0, MPI_COMM_WORLD);
-
+    MPI_Barrier(MPI_COMM_WORLD);
+    // Measure the start time
+    double start_time = MPI_Wtime();
     // Sum local matrix elements within each process
     unsigned long long int local_sum = sum_matrix_range(N, local_matrix, 0, local_rows);
 
     // Gather local sums to calculate the total sum
     unsigned long long int total_sum;
     MPI_Reduce(&local_sum, &total_sum, 1, MPI_UNSIGNED_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
-
+    MPI_Barrier(MPI_COMM_WORLD);
     // Measure the end time
     double end_time = MPI_Wtime();
     double elapsed_time = end_time - start_time;

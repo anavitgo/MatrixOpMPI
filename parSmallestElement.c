@@ -54,8 +54,7 @@ int main(int argc, char *argv[]) {
     srand((unsigned int)time(NULL) + rank);
 
     // Measure the start time
-    double start_time = MPI_Wtime();
-
+    
     // Allocate memory for the matrix
     int *matrix = NULL;
     if (rank == 0) {
@@ -70,14 +69,16 @@ int main(int argc, char *argv[]) {
     int local_rows = N / size;
     int *local_matrix = (int *)malloc(local_rows * N * sizeof(int));
     MPI_Scatter(matrix, local_rows * N, MPI_INT, local_matrix, local_rows * N, MPI_INT, 0, MPI_COMM_WORLD);
-
+    MPI_Barrier(MPI_COMM_WORLD);
+    double start_time = MPI_Wtime();
+    
     // Find the local minimum element within each process
     int local_min = find_min_element_range(N, local_matrix, 0, local_rows);
 
     // Gather local minimum elements to find the total minimum element
     int total_min;
     MPI_Reduce(&local_min, &total_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
-
+    MPI_Barrier(MPI_COMM_WORLD);
     // Measure the end time
     double end_time = MPI_Wtime();
     double elapsed_time = end_time - start_time;

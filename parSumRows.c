@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
         printf("\n--------------------------------\n");
         printf("EXECUTING PARALLEL ROW SUM\n");
         printf("--------------------------------\n");
-        par_start_time = omp_get_wtime();
+        
         matrix = (int *)malloc(n * n * sizeof(int));
         srand((unsigned int)time(NULL) + rank);
         generate_random_matrix(n, matrix);
@@ -74,7 +74,8 @@ int main(int argc, char *argv[]) {
 
     // Distribute rows among processors
     MPI_Scatter(matrix, rows_per_proc * n, MPI_INT, local_rows, rows_per_proc * n, MPI_INT, 0, MPI_COMM_WORLD);
-
+    MPI_Barrier(MPI_COMM_WORLD);
+    par_start_time = omp_get_wtime();
     // Perform row sums in parallel
 #pragma omp parallel for
     for (int i = 0; i < rows_per_proc; i++) {
@@ -85,15 +86,15 @@ int main(int argc, char *argv[]) {
         MPI_Get_processor_name(processor_name, &name_len);
 
         // Print the sum of each row
-        printf("Processor %d is running on host %s - Row %d Sum: %llu\n", rank, processor_name, i + rank * rows_per_proc, row_sum);
+        printf("Row %d Sum: %llu\n", i, row_sum);
 
     }
 
     free(matrix);
     free(local_rows);
 
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
-
     if (rank == 0) {
         par_end_time = omp_get_wtime();
         printf("Parallel time: %lfs\n", par_end_time - par_start_time);
